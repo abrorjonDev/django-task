@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <h2>Hisobotlar</h2>
+    <a href="{% url 'startups:startup_create' %}" class="btn btn-primary">Qo'shish</a>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Direktori</th>
+            <th scope="col">Nomi</th>
+            <th scope="col">Joriy Oydagi Daromad</th>
+            <th scope="col">Joriy oydagi mijozlar soni</th>
+            <th scope="col">Ish haqi</th>
+            <th scope="col">Marketing reklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if object_list %}
+            {% for startup in object_list %}
+              <tr>
+                <th scope="row">{{ startup.id }}</th>
+                <td>{{ startup.author }}</td>
+                <td>{{ startup.name }}</td>
+                <td>
+                  {% if startup.curr_month_revenue.is_rising %}
+                    <i class="fa fa-arrow-up"></i> 
+                  {% else %}
+                    <i class="fa fa-arrow-down"></i>
+                  {% endif %}
+                  {{ startup.curr_month_revenue.percentage|default:"0"  }}&percnt;
+                  ({{ startup.curr_month_revenue.income|default:"0"  }} so'm)
+                  </td>
+                <td>
+                  {% if startup.curr_month_revenue.client_rising %}
+                    <i class="fa fa-arrow-up green"></i> 
+                  {% else %}
+                    <i class="fa fa-arrow-down red"></i>
+                  {% endif %}
+                  {{ startup.curr_month_revenue.client_percentage|default:"0" }}&percnt;
+                  ({{ startup.curr_month_revenue.clients|default:"0"  }})</td>
+                <td>
+                  {% if startup.curr_month_outgoing.is_rising %}
+                    <i class="fa fa-arrow-up"></i> 
+                  {% else %}
+                    <i class="fa fa-arrow-down"></i>
+                  {% endif %}
+                  {{ startup.curr_month_outgoing.percentage|default:"0" }}&percnt;
+                  ({{ startup.curr_month_outgoing.salary|default:"0" }} so'm)</td>
+                <td>
+                  {% if startup.curr_month_outgoing.marketing_rising %}
+                    <i class="fa fa-arrow-up"></i> 
+                  {% else %}
+                    <i class="fa fa-arrow-down"></i>
+                  {% endif %}
+                  {{ startup.curr_month_outgoing.marketing_percentage|default:"0"  }}&percnt;
+                  ({{ startup.curr_month_outgoing.marketing|default:"0"  }})</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+{% endblock%}

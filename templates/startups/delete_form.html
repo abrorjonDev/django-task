@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <form method="post" class="m-4 p-4">
+        <legend class="text-center">{{ page_title }}</legend>
+        <fieldset class="form-group m-2 p-2">
+            <span>Rostdan ham {{ object }} ni o;chirmoqchisimiz?</span>
+            {% csrf_token %}
+            {{ form|crispy }}
+        </fieldset>
+        <button type="submit" class="btn btn-danger">O'chirish</button>
+        <a href="{% url 'startups:home' %}" class="btn btn-secondary"> Ortga </a>
+    </form>
+{% endblock %}

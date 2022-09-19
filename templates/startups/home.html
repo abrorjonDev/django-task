@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <h2>Hisobotlar</h2>
+    <a href="{% url 'startups:startup_create' %}" type="button" class="btn btn-primary">Qo'shish</a>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">loyiha</th>
+            <th scope="col">Vaqti</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for startup in object_list %}
+          <tr>
+            <th scope="row">{{ startup.id }}</th>
+            <td><a href="{% url 'startups:reports' startup.id %}">{{ startup.name }}</a></td>
+            <td>{{ startup.date_created }}</td>
+            <td>
+            {% if startup.author == request.user %}
+                <a href="{% url 'startups:startup_update' startup.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                <a href="{% url 'startups:startup_delete' startup.id %}" class="btn btn-secondary"><i class="fa fa-trash"></i></a>
+            {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

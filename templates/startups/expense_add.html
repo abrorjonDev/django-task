@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<h2>Xarajatlar</h2>
+{% endblock %}
+
+{% block content %}
+
+       <div class="row">
+        <div class="col-8">
+            <h2>Xarajatlar</h2>
+            <form method="post">
+                {% csrf_token %}
+              <div class="mb-3">
+                <label for="id_salary" class="form-label">Ish haqi</label>
+                <input type="text" class="form-control" id="id_salary" placeholder="Ish haqi" name="salary">
+            </div>
+            <div class="mb-3">
+                <label for="id_marketing" class="form-label">Marketing reklama</label>
+                <input type="text" class="form-control" id="id_marketing" placeholder="Marketing reklama" name="marketing">
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Jo'natish</button>
+            </div>
+
+            </form>
+        </div>
+       </div>
+      </div>
+{% endblock %}

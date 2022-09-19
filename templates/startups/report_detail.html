@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h2>Daromad</h2>
+            {% if request.user.is_superuser %}
+            {% else %}
+            <a href="{% url 'startups:revenue-add' startup.id %}" type="button" class="btn btn-primary">Qo'shish</a>
+            {% endif %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Daromadlar (Mahsulot va xizmatlar bo'yicha)</th>
+                        <th scope="col">Oylik hisobot uchun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for revenue in object_list %}
+                        <tr>
+                            <th scope="row">{{ revenue.id }}</th>
+                            <td>Joriy oyda olingan daromad</td>
+                            <td>{{ revenue.income }}</td>
+
+                            <td> {{ revenue.date_created }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>Joriy oydagi mijozlar soni</td>
+                            <td>{{ revenue.clients }}</td>
+
+                            <td> {{ revenue.date_created }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <h2>Xarajatlar</h2>
+            {% if request.user.is_superuser %}
+            {% else %}
+            <a href="{% url 'startups:expense-add' startup.id %}" type="button" class="btn btn-primary">Qo'shish</a>
+            {% endif %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Xarajatlar</th>
+                        <th scope="col">Oylik hisobot uchun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for outgoing in outgoings %}
+                        <tr>
+                            <th scope="row">{{ outgoing.id }}</th>
+                            <td>Ish haqi</td>
+                            <td>{{ outgoing.salary }}</td>
+                            
+                            <td> {{ outgoing.date_created }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"></th>
+                            <td>Marketing reklama</td>
+                            <td>{{ outgoing.marketing }}</td>
+
+                            <td> {{ outgoing.date_created }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

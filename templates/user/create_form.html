@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block content %}
+    <form method="post" class="m-4 p-4">
+        <legend class="text-center">{{ page_title }}</legend>
+        <fieldset class="form-group m-2 p-2">
+            {% csrf_token %}
+            {{ form|crispy }}
+        </fieldset>
+        <button type="submit" class="btn btn-{{ button_tag }}">{{ action_name }}</button>
+    </form>
+{% endblock %}

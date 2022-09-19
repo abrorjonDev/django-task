@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+<h2>Daromadlar</h2>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-8">
+     
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3 form-group">
+          <label for="id_income" class="form-label">Joriy oyda olingan daromad</label>
+          <input type="text" class="form-control" id="id_income" placeholder="Joriy oyda olingan daromad" name="income">
+        </div>
+        <div class="mb-3 form-group">
+            <label for="id_clients" class="form-label">Joriy oydagi mijozlar soni</label>
+            <input type="text" class="form-control" id="id_clients" placeholder="Joriy oydagi mijozlar soni" name="clients">
+        </div>
+        <div class="mb-3 form-group">
+            <button type="submit" class="btn btn-primary">Jo'natish</button>
+        </div>
+      </form>
+  </div>
+ </div>
+
+ {% endblock %}
