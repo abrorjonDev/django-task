@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+<h2>Hisobotlar</h2>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'startups:startup_create' %}" class="btn btn-primary">Qo'shish</a>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">loyiha</th>
+            <th scope="col">Vaqti</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% if startups %}
+                {% for startup in startups %}
+                <tr>
+                    <th scope="row">{{startup.id}}</th>
+                    <td><a href="{% url 'startups:startup_detail' startup.id %}">{{startup.name}}</a></td>
+                    <td>{{startup.date_created}}</td>
+                    <td>{% if startup.created_by == request.user %}
+                      <a href="{% url 'startups:startup_update' startup.id %}" class="btn btn-outline btn-primary">Tahrirlash</a>
+                      {% endif %}
+                    </td>
+                    {% if request.user.is_superuser %}
+                      <td>{{startup.created_by.fio   }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td>Startup loyihalar mavjud emas</td></tr>
+            {% endif %}
+        </tbody>
+      </table>
+
+    {% endblock %}
+      

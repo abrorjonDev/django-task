@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <h4>{{page_title}}</h4>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <h4> Rostan ham o'chirishni xohlaysizmi?</h4>
+        <fieldset>
+            {% csrf_token %}
+            {{ form|crispy }}
+        </fieldset>
+        <button class="btn btn-danger" type="submit">{{action_name}}</button>
+        <a href="{% url 'startups:home' %}" class="btn btn-outline-primary">Ortga</a>
+
+    </form>
+{% endblock %}

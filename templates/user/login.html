@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+
+<div class="container py-10" style="background-color: rgb(241,245,246);  padding-top: 10%; margin-bottom: 1%; margin-left: 6%; margin-right: 20%; padding-right: 20%; padding-left: 20%;">
+    <div class="p-5 mb-4  rounded-3" style="background-color: rgb(241,245,246);">
+        <form method="POST">{% csrf_token %}
+            <img style="width: 90px;" src="https://tbcuzprodstorage.blob.core.windows.net/cdn/2012/01/36/f44df7e85983409d870adf05afae3d68/transfers-tto-eny-direction.png" alt="">
+            <center><h3>Sign In</h3></center>
+            {{form|crispy}}
+            {% comment %} <a href="{% url 'password_reset'  %}" style="text-align: right; "><p><b>Forgot Password?</b></p></a> {% endcomment %}
+            <strong><button  class="btn btn-outline-info"><strong> Log in</button></strong>
+            <div class="d-flex" style="margin-top: 20px;">
+                <p  class="text-muted">Have you not account?</p><a href="{% url 'user:sign-up' %}" style="padding-left: 20px;">Create an new Account</a>
+                <img  style="width: 90px;" src="https://tbcuzprodstorage.blob.core.windows.net/cdn/2012/01/36/f44df7e85983409d870adf05afae3d68/transfers-tto-eny-direction.png" alt="">
+            
+            </div>
+            
+            
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    <h4>{{ page_title }}</h4>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div>
+            <div>
+                <h4 class="p-2 m-2">{{startup.name}}</h4>
+            </div>
+            <a href="{% url 'startups:startup_update' startup.id %}" class="btn btn-primary">Tahrirlash</a>
+            
+        </div>
+        <hr>
+        <form action="{% url 'startups:revenues' startup.id %}" class="form-group" method="post">
+            {% csrf_token %}
+            {{ form|crispy}}
+            <button class="btn btn-primary p-2 m-2" type="submit">Hisobot yaratish</button>
+        </form>
+        {% for revenue in revenues %}
+        <hr>
+        <div class="row">
+            <div class="col-8">
+                <h2>{{ revenue.name }}</h2>
+                <a href="{% url 'startups:revenues_update' revenue.id %}" type="button" class="btn btn-primary">Hisobotni tahrirlash</a>
+                <a href="{% url 'startups:revenues_delete' revenue.id %}" type="button" class="btn btn-danger">Hisobotni o'chirish</a>
+                
+                <a href="{% url 'startups:revenues_fields_create' revenue.id %}" type="button" class="btn btn-primary">Soha Qo'shish</a>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Daromadlar (Mahsulot va xizmatlar bo'yicha)</th>
+                            <th scope="col">Oylik hisobot uchun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field in revenue.get_fields %}
+                            <tr>
+                                <th scope="row">{{field.id}}</th>
+                                <td>{{field.name}}</td>
+                                <td>{{field.value}}</td>
+                                <td> {{ field.date_created|timesince }} ago</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock %}
