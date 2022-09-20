@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load filter_revenues %}
 {% block title %}
     {{ page_title }}
 {% endblock %}
@@ -22,6 +23,51 @@
         <tbody>
           {% if object_list %}
             {% for startup in object_list %}
+              {% if startup.author.is_superuser %}
+                {% for revenue in startup.all_users_revenues %}
+                    <tr>
+                      <th scope="row">{{ startup.id }}</th>
+                      <td>{{ revenue.author|default:"1" }}</td>
+                      <td><a href="{% url 'startups:reports' startup.id %}">{{ startup.name }}</a></td>
+                      <td>
+                        {% if revenue.is_rising %}
+                          <i class="fa fa-arrow-up"></i> 
+                        {% else %}
+                          <i class="fa fa-arrow-down"></i>
+                        {% endif %}
+                        {{ revenue.percentage|default:"0"  }}&percnt;
+                        ({{ revenue.income|default:"0"  }} so'm)
+                        </td>
+                      <td>
+                        {% if revenue.client_rising %}
+                          <i class="fa fa-arrow-up green"></i> 
+                        {% else %}
+                          <i class="fa fa-arrow-down red"></i>
+                        {% endif %}
+                        {{ revenue.client_percentage|default:"0" }}&percnt;
+                        ({{ revenue.clients|default:"0"  }})</td>
+                      <td>
+                        {% if revenue.get_last_outgoing.is_rising %}
+                          <i class="fa fa-arrow-up"></i> 
+                        {% else %}
+                          <i class="fa fa-arrow-down"></i>
+                        {% endif %}
+                        {{ revenue.get_last_outgoing.percentage|default:"0" }}&percnt;
+                        ({{ revenue.get_last_outgoing.salary|default:"0" }} so'm)</td>
+                      <td>
+                        {% if revenue.get_last_outgoing.marketing_rising %}
+                          <i class="fa fa-arrow-up"></i> 
+                        {% else %}
+                          <i class="fa fa-arrow-down"></i>
+                        {% endif %}
+                        {{ revenue.get_last_outgoing.marketing_percentage|default:"0"  }}&percnt;
+                        ({{ revenue.get_last_outgoing.marketing|default:"0"  }})</td>
+                    </tr>
+                {% endfor %}
+
+              {% else %}
+            
+              
               <tr>
                 <th scope="row">{{ startup.id }}</th>
                 <td>{{ startup.author }}</td>
@@ -60,7 +106,10 @@
                   {{ startup.curr_month_outgoing.marketing_percentage|default:"0"  }}&percnt;
                   ({{ startup.curr_month_outgoing.marketing|default:"0"  }})</td>
               </tr>
-            {% endfor %}
+        
+              {% endif %}
+            
+              {% endfor %}
           {% endif %}
         </tbody>
       </table>

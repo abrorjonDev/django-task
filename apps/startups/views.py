@@ -20,6 +20,7 @@ class HomeView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
+            print(self.queryset.all())
             return self.queryset.all()
         admins = User.objects.filter(is_superuser=True)
         return self.queryset.filter(
@@ -159,14 +160,14 @@ def report_create(request, startup_id: int):
                 income=income, clients=clients, startup_id=startup_id, author=request.user
             )
             try:
-                revenue.percentage = (income / last_revenue.income) * 100 - 100
+                revenue.percentage = (income - last_revenue.income) / last_revenue.income * 100
             except:
                 pass
             if revenue.percentage < 0:
                 revenue.is_rising = False
 
             try:
-                revenue.client_percentage = (clients / last_revenue.clients) * 100 - 100
+                revenue.client_percentage = (clients- last_revenue.clients) / last_revenue.clients * 100
             except:
                 pass
             if revenue.client_percentage < 0:
@@ -193,14 +194,14 @@ def expense_create(request, startup_id: int):
                 salary=salary, marketing=marketing, startup_id=startup_id, author=request.user
             )
             try:
-                expense.percentage = (salary / last_expense.salary) * 100 - 100
+                expense.percentage = (salary - last_expense.salary)/ last_expense.salary * 100 
             except:
                 pass
             if expense.percentage < 0:
                 expense.is_rising = False
             
             try:
-                expense.marketing_percentage = (marketing / last_expense.marketing) * 100 - 100
+                expense.marketing_percentage = (marketing - last_expense.marketing)/ last_expense.marketing * 100
             except:
                 pass
             if expense.marketing_percentage < 0:

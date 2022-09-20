@@ -7,4 +7,6 @@ from .models import Outgoings, Startups, Revenues
 
 admin.site.register(Startups)
 admin.site.register(Outgoings)
-admin.site.register(Revenues)
+@admin.register(Revenues)
+class RevenueAdmin(admin.ModelAdmin):
+    list_display = ("id", "startup", "author")

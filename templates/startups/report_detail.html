@@ -29,6 +29,9 @@
                             <td>{{ revenue.income }}</td>
 
                             <td> {{ revenue.date_created }}</td>
+                            {% if request.user.is_superuser %}
+                                <td>{{ revenue.author }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th scope="row"></th>
@@ -36,6 +39,9 @@
                             <td>{{ revenue.clients }}</td>
 
                             <td> {{ revenue.date_created }}</td>
+                            {% if request.user.is_superuser %}
+                                <td>{{ revenue.author }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -65,6 +71,9 @@
                             <td>{{ outgoing.salary }}</td>
                             
                             <td> {{ outgoing.date_created }}</td>
+                            {% if request.user.is_superuser %}
+                                <td>{{ outgoing.author }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th scope="row"></th>
@@ -72,6 +81,9 @@
                             <td>{{ outgoing.marketing }}</td>
 
                             <td> {{ outgoing.date_created }}</td>
+                            {% if request.user.is_superuser %}
+                                <td>{{ outgoing.author }}</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>

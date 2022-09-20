@@ -15,7 +15,11 @@
 </head>
 <body>
     <header class="d-flex justify-content-between align-item-center">
-        <a href="#" class="m-4 p-4">Logo</a>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'startups:admin' %}" class="m-4 p-4">Logo</a>
+        {% else %}
+        <a href="{% url 'startups:home' %}" class="m-4 p-4">Logo</a>
+        {% endif %}
         <div class="user m-4 p-4">
             {% if request.user.is_anonymous %}
                 <a href="{% url 'user:signup' %}" class="btn btn-primary">Register</a>
