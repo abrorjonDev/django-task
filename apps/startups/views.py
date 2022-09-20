@@ -116,7 +116,7 @@ class ReportListView(LoginRequiredMixin, ListView):
         kwargs = {"startup": self.startup}
         if not self.request.user.is_superuser:
             kwargs["author"] = self.request.user
-        return self.queryset.filter(**kwargs).order_by("date_created")
+        return self.queryset.filter(**kwargs).order_by("-date_created")
 
     def get(self, request, *args, **kwargs):
         self.startup = get_object_or_404(Startups, pk=kwargs["startup_id"])
@@ -127,7 +127,7 @@ class ReportListView(LoginRequiredMixin, ListView):
         kwargs = {"startup": self.startup}
         if not self.request.user.is_superuser:
             kwargs["author"] = self.request.user
-        outgoings = Outgoings.objects.filter(**kwargs).order_by("date_created")
+        outgoings = Outgoings.objects.filter(**kwargs).order_by("-date_created")
         
         kwargs.setdefault("outgoings", outgoings)
         kwargs.setdefault("startup", self.startup)
@@ -138,7 +138,7 @@ def check_availability(request, startup_id):
     startup = get_object_or_404(Startups, pk=startup_id)
     if request.user.is_superuser:
         raise Http404
-    if not request.user.is_superuser and startup.author != request.user:
+    if not request.user.is_superuser and startup.author != request.user and not startup.author.is_superuser:
         raise Http404
         # messages.add_message(request, messages.WARNING, "Sizga mumkinmas")
         # return redirect("startups:reports", startup_id=startup_id)
@@ -153,7 +153,7 @@ def report_create(request, startup_id: int):
             income = form.cleaned_data.get("income")
             clients = form.cleaned_data.get("clients")
 
-            last_revenue = Revenues.objects.all().first() # filtered on -date_created
+            last_revenue = Revenues.objects.filter(startup_id=startup_id).last() # filtered on -date_created
             
             revenue = Revenues(
                 income=income, clients=clients, startup_id=startup_id, author=request.user
@@ -187,7 +187,7 @@ def expense_create(request, startup_id: int):
             salary = form.cleaned_data.get("salary")
             marketing = form.cleaned_data.get("marketing")
 
-            last_expense = Outgoings.objects.all().first() # filtered on -date_created
+            last_expense = Outgoings.objects.filter(startup_id=startup_id).last() # filtered on -date_created
             
             expense = Outgoings(
                 salary=salary, marketing=marketing, startup_id=startup_id, author=request.user

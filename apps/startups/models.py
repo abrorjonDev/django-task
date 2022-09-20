@@ -23,12 +23,12 @@ class Startups(BaseModel):
 
     @property
     def curr_month_revenue(self):
-        return self.get_revenues.last()
+        return self.get_revenues.first()
 
 
     @property
     def curr_month_outgoing(self):
-        return self.outgoings.all().last()
+        return self.outgoings.all().first()
 
 
 

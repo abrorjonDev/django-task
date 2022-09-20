@@ -25,7 +25,7 @@
               <tr>
                 <th scope="row">{{ startup.id }}</th>
                 <td>{{ startup.author }}</td>
-                <td>{{ startup.name }}</td>
+                <td><a href="{% url 'startups:reports' startup.id %}">{{ startup.name }}</a></td>
                 <td>
                   {% if startup.curr_month_revenue.is_rising %}
                     <i class="fa fa-arrow-up"></i> 
