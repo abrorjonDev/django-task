@@ -154,7 +154,7 @@ def report_create(request, startup_id: int):
             income = form.cleaned_data.get("income")
             clients = form.cleaned_data.get("clients")
 
-            last_revenue = Revenues.objects.filter(startup_id=startup_id).last() # filtered on -date_created
+            last_revenue = Revenues.objects.filter(startup_id=startup_id, author=request.user).last() # filtered on -date_created
             
             revenue = Revenues(
                 income=income, clients=clients, startup_id=startup_id, author=request.user
@@ -188,7 +188,7 @@ def expense_create(request, startup_id: int):
             salary = form.cleaned_data.get("salary")
             marketing = form.cleaned_data.get("marketing")
 
-            last_expense = Outgoings.objects.filter(startup_id=startup_id).last() # filtered on -date_created
+            last_expense = Outgoings.objects.filter(startup_id=startup_id, author=request.user).last() # filtered on -date_created
             
             expense = Outgoings(
                 salary=salary, marketing=marketing, startup_id=startup_id, author=request.user
