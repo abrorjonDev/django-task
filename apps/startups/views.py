@@ -15,18 +15,14 @@ from apps.user.models import User
 
 class HomeView(LoginRequiredMixin, ListView):
     template_name = "startups/home.html"
-    queryset = Startups.objects.all()
 
     def get_queryset(self):
+        queryset = Startups.objects.all()
         user = self.request.user
         if user.is_superuser:
-            print(self.queryset.all())
-            return self.queryset.all()
+            return queryset
         admins = User.objects.filter(is_superuser=True)
-        return self.queryset.filter(
-                                    Q(author=user)|
-                                    Q(author=any(admins))
-                                    )
+        return queryset.filter(Q(author=user) | Q(author__in=admins))
 
     def get_context_data(self, **kwargs):
         kwargs.setdefault("page_title", "Biznes Loyihalar")
@@ -38,10 +34,11 @@ class HomeView(LoginRequiredMixin, ListView):
         return super().get(request, *args, **kwargs)
 
 def startup_create(request):
-    kwargs = dict()
-    kwargs.setdefault("page_title", "LOYIHA YARATISH")
-    kwargs.setdefault("action_name", "Jo'natish")
-    kwargs.setdefault("button_tag", "primary")
+    kwargs = {
+        "page_title": "LOYIHA YARATISH",
+        "action_name": "Jo'natish",
+        "button_tag": "primary"
+    }
 
     if request.method == "POST":
         form = StartupForm(request.POST)
@@ -80,9 +77,11 @@ class StartupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         #     self.success_url = "/admin/"
         return super().get_success_url()
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        kwargs.setdefault("page_title", "LOYIHANI TAHRIRLASH")
-        kwargs.setdefault("action_name", "Jo'natish")
-        kwargs.setdefault("button_tag", "primary")
+        kwargs.update({
+            "page_title": "LOYIHA TAHRIRLASH",
+            "action_name": "Jo'natish",
+            "button_tag": "primary"
+        })
         return super().get_context_data(**kwargs)
     
     def test_func(self):
@@ -111,13 +110,13 @@ class StartupDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class ReportListView(LoginRequiredMixin, ListView):
     template_name = "startups/report_detail.html"
     startup = None
-    queryset = Revenues.objects.all()
 
     def get_queryset(self):
+        queryset = Revenues.objects.all()
         kwargs = {"startup": self.startup}
         if not self.request.user.is_superuser:
             kwargs["author"] = self.request.user
-        return self.queryset.filter(**kwargs).order_by("-date_created")
+        return queryset.filter(**kwargs).order_by("-date_created")
 
     def get(self, request, *args, **kwargs):
         self.startup = get_object_or_404(Startups, pk=kwargs["startup_id"])
@@ -128,14 +127,17 @@ class ReportListView(LoginRequiredMixin, ListView):
         kwargs = {"startup": self.startup}
         if not self.request.user.is_superuser:
             kwargs["author"] = self.request.user
+
         outgoings = Outgoings.objects.filter(**kwargs).order_by("-date_created")
-        
-        kwargs.setdefault("outgoings", outgoings)
-        kwargs.setdefault("startup", self.startup)
+
+        kwargs.update({
+            "outgoings": outgoings,
+            "startup": self.startup
+        })
         return super().get_context_data(**kwargs)
 
 
-def check_availability(request, startup_id):
+def check_availability(request, startup_id: int):
     startup = get_object_or_404(Startups, pk=startup_id)
     if request.user.is_superuser:
         raise Http404
