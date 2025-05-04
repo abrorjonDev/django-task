@@ -8,8 +8,4 @@ register = template.Library()
 
 @register.filter(name="filter_revenues")
 def filter_revenues(value: Startups, user: User):
-    revenue = Revenues.objects.filter(startup=value, author=user).first()
-
-    if revenue == None:
-        return None
-    return revenue
+    return Revenues.objects.filter(startup=value, author=user).first()
