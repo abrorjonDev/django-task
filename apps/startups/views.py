@@ -17,12 +17,10 @@ class HomeView(LoginRequiredMixin, ListView):
     template_name = "startups/home.html"
 
     def get_queryset(self):
-        queryset = Startups.objects.all()
         user = self.request.user
         if user.is_superuser:
-            return queryset
-        admins = User.objects.filter(is_superuser=True)
-        return queryset.filter(Q(author=user) | Q(author__in=admins))
+            return Startups.objects.all()
+        return Startups.objects.filter(Q(author__is_superuser=True) | Q(author=user))
 
     def get_context_data(self, **kwargs):
         kwargs.setdefault("page_title", "Biznes Loyihalar")
@@ -58,11 +56,8 @@ class StartupDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Startups
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        kwargs["categories"] = self.get_revenue_categories()
+        kwargs["categories"] = get_list_or_404(Revenues, startup=self.get_object())
         return super().get_context_data(**kwargs)
-    
-    def get_revenue_categories(self):
-        return get_list_or_404(Revenues, startup=self.get_object())
 
 
 class StartupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -73,9 +68,8 @@ class StartupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_success_url(self) -> str:
         messages.add_message(self.request, messages.SUCCESS, "Muvaffaqiyatli yangilandi")
-        # if self.request.user.is_superuser:
-        #     self.success_url = "/admin/"
         return super().get_success_url()
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         kwargs.update({
             "page_title": "LOYIHA TAHRIRLASH",
